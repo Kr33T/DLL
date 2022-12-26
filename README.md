@@ -25,17 +25,17 @@
 
 Программа производит поиск следующим образом:
 + В главном методе программы происходит подключение DLL-библиотеки и объявление массива структуры для считанных данных:
-'''
+```
 HINSTANCE hMyDLL;
 if ((hMyDLL = LoadLibrary(PATH)) == NULL) return 1;
 forReadData myFun = (forReadData)GetProcAddress(hMyDLL, "readData");
 struct users* user = calloc(5000, sizeof(struct users));
 myFun(user);
-'''
+```
 + Весь функционал описан в DLL-библиотеке
 	+ Самым первым выполняемым методом в библиотеке является считываение данных из файла
 		+ Сначала проиходит считывание информации из файла в строковую переменную (буфер)
-		'''
+		```
     		HANDLE fileStart;
     		fileStart = CreateFile(READPATH,
      		   GENERIC_READ,
@@ -56,9 +56,9 @@ myFun(user);
   	      	MessageBox(NULL, L"При чтении данных из файла возникла ошибка!", L"Окно программы", MB_OK);
   	      	return 0;
   	  	}
-		'''
+		```
 		+ После закрываем дескриптор и заносим полученные данные в создыннй ранее массив структур
-		'''
+		```
     		CloseHandle(fileStart);
 
 		char* dataConvertToStruct = strtok(argumentsFromFile, ";");
@@ -75,21 +75,21 @@ myFun(user);
     	   		people[i].age = atoi(dataConvertToStruct);
      	   		dataConvertToStruct = strtok(NULL, ";\r\n");
     		}
-		'''
+		```
 		+ Последним действием вызывается метод для поиска пользователей по фамилиям
-		'''
+		```
 		searchSurname(people, "Иванов");
-		'''
+		```
 	+ Метод для поиска по фамилиям принимает два аргумента - это массив структуры пользователей и фамилия в виде строковой переменной
 		+ Первым делом объявляется новые массивы структур для записи в них пользователей с искомой фамилией
-		'''
+		```
 		struct users* currentPeople = malloc(sizeof(struct users));
     		struct users* forCurrentPeople;
     		int j = 0;
     		char* forComprasion = surnameForSearch;
-		'''
+		```
 		+ Далее выполняется цикл, проходящий по всем пользователям, чтобы найти совпадения по фамилиям
-		'''
+		```
 		for (int i = 0; i < 100; i++)
     		{
         		if (strcmp(people[i].surname, forComprasion) == 0)
@@ -100,14 +100,14 @@ myFun(user);
             		currentPeople = forCurrentPeople;
         		}
     		}
-		'''
+		```
 		+ Заключительным действием в данном методе является вызов другого метода, необходимого для записи результатов в файл
-		'''
+		```
 		writeToFile(currentPeople, j);
-		'''
+		```
 	+ Послений метод необходим для записи результата в отдельный от исходной информации файл
 		+ Изначально необходимо открыть файл для записи
-		'''
+		```
 		HANDLE fileResult = CreateFile(L"ResultIvanova.csv",
         		GENERIC_WRITE,
         		FILE_SHARE_WRITE,
@@ -116,22 +116,28 @@ myFun(user);
         		FILE_ATTRIBUTE_NORMAL,
         		NULL);
     		DWORD countFileSymbols;
-		'''
+		```
 		+ Объявляем строку и запускаем цикл по массиву найденых записей, чтобы записать в вышеуказанную строку данные в указанном формате
-		'''
+		```
 		char* dataForWritting = calloc(1000, sizeof(char));
     		for (int i = 0; i < countCurrentPeople; i++)
     		{
         		sprintf(dataForWritting, "%s;%s;%s;%d\n", currentPeople[i].surname, currentPeople[i].name, currentPeople[i].midname, currentPeople[i].age);
         		WriteFile(fileResult, dataForWritting, strlen(dataForWritting), &countFileSymbols, NULL);
     		}
-		'''
+		```
 		+ Заключительным действием записываем данные в файл, освобождаем память, выделенную под строку и закрываем дескриптор файла
-		'''
+		```
 		WriteFile(fileResult, dataForWritting, strlen(dataForWritting), &countFileSymbols, NULL);
     		free(dataForWritting);
     		CloseHandle(fileResult);
-		'''
+		```
+___
+
+После запуска программы вы увидите следующий результат:
+
+![](https://github.com/Kr33T/DLL/blob/master/res.png)
+
 ## Авторы
 
 * **Morozov Andrew**
