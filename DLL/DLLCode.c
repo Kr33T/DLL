@@ -69,7 +69,6 @@ void readData(struct users* people)
         people[i].age = atoi(dataConvertToStruct);
         dataConvertToStruct = strtok(NULL, ";\r\n");
     }
-    CloseHandle(fileStart);
 
     searchSurname(people, "Иванов");
     searchSurnameIvanova(people);
