@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{5750B8B7-3FF0-4D67-BB72-43A0E52C3472}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		res.png = res.png
 	EndProjectSection
 EndProject
 Global
